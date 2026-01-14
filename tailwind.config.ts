@@ -2,7 +2,12 @@ import type { Config } from "tailwindcss";
 
 export default {
   darkMode: ["class"],
-  content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
+  content: [
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   prefix: "",
   theme: {
     container: {
@@ -13,6 +18,9 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        nunito: ["Nunito", "sans-serif"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -57,6 +65,35 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // Calming palette colors
+        serene: {
+          DEFAULT: "hsl(var(--serene-blue))",
+          light: "hsl(var(--serene-blue-light))",
+          dark: "hsl(var(--serene-blue-dark))",
+        },
+        nature: {
+          DEFAULT: "hsl(var(--nature-green))",
+          light: "hsl(var(--nature-green-light))",
+          dark: "hsl(var(--nature-green-dark))",
+        },
+        soft: {
+          DEFAULT: "hsl(var(--soft-pink))",
+          light: "hsl(var(--soft-pink-light))",
+          dark: "hsl(var(--soft-pink-dark))",
+        },
+        cream: {
+          DEFAULT: "hsl(var(--warm-cream))",
+          dark: "hsl(var(--warm-cream-dark))",
+        },
+        lavender: {
+          DEFAULT: "hsl(var(--lavender))",
+          light: "hsl(var(--lavender-light))",
+          dark: "hsl(var(--lavender-dark))",
+        },
+        crisis: {
+          DEFAULT: "hsl(var(--crisis-pink))",
+          dark: "hsl(var(--crisis-pink-dark))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -65,20 +102,12 @@ export default {
       },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
         },
       },
       animation: {
