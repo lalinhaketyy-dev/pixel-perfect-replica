@@ -11,7 +11,7 @@ export default function Profile() {
   const { profile, getAverageMood, clearHistory: clearMoodHistory } = useUserProfile();
   const { clearMessages } = useChatMessages();
 
-  const moodEmojis = ['', '😢', '😔', '😐', '🙂', '😊'];
+  const moodSymbols = ['', '◆', '▼', '●', '▲', '★'];
   const avgMood = getAverageMood();
 
   const handleClearHistory = () => {
@@ -32,7 +32,7 @@ export default function Profile() {
             <h1 className="text-2xl font-bold">{profile.nickname || t('profile.title')}</h1>
             {avgMood && (
               <p className="text-muted-foreground">
-                {t('profile.averageMood')}: {moodEmojis[Math.round(avgMood)]}
+                {t('profile.averageMood')}: {moodSymbols[Math.round(avgMood)]}
               </p>
             )}
           </div>
