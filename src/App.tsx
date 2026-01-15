@@ -8,6 +8,7 @@ import { useUserProfile } from "@/hooks/useUserProfile";
 import Welcome from "./pages/Welcome";
 import Chat from "./pages/Chat";
 import MentalExercises from "./pages/MentalExercises";
+import BreathingExercise from "./pages/BreathingExercise";
 import PhysicalActivities from "./pages/PhysicalActivities";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
@@ -30,6 +31,7 @@ function AppRoutes() {
       <Route path="/" element={<Navigate to="/chat" replace />} />
       <Route path="/chat" element={<Chat />} />
       <Route path="/mental" element={<MentalExercises />} />
+      <Route path="/mental/breathing" element={<BreathingExercise />} />
       <Route path="/physical" element={<PhysicalActivities />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="*" element={<NotFound />} />

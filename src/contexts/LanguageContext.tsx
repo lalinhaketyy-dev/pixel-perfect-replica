@@ -66,7 +66,12 @@ const translations: Record<Language, Record<string, string>> = {
     'breathing.hold': 'Segure',
     'breathing.exhale': 'Expire',
     'breathing.complete': 'Exercício completo!',
+    'breathing.completeMessage': 'Você fez um ótimo trabalho cuidando de si mesmo.',
     'breathing.back': 'Voltar',
+    'breathing.start': 'Iniciar',
+    'breathing.pause': 'Pausar',
+    'breathing.restart': 'Recomeçar',
+    'breathing.technique': 'Técnica 4-7-8 para relaxamento profundo',
     
     // Physical Activities
     'physical.title': 'Atividades Físicas',
@@ -177,7 +182,12 @@ const translations: Record<Language, Record<string, string>> = {
     'breathing.hold': 'Hold',
     'breathing.exhale': 'Exhale',
     'breathing.complete': 'Exercise complete!',
+    'breathing.completeMessage': 'Great job taking care of yourself.',
     'breathing.back': 'Back',
+    'breathing.start': 'Start',
+    'breathing.pause': 'Pause',
+    'breathing.restart': 'Restart',
+    'breathing.technique': '4-7-8 technique for deep relaxation',
     
     // Physical Activities
     'physical.title': 'Physical Activities',

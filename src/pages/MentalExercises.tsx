@@ -1,17 +1,25 @@
-import { Wind, BookHeart, Brain, Lightbulb } from 'lucide-react';
+import { Wind, BookHeart, Brain, Lightbulb, ChevronRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { PageContainer, CalmCard } from '@/components/CalmComponents';
 import { BottomNav } from '@/components/BottomNav';
 
 export default function MentalExercises() {
   const { t } = useLanguage();
+  const navigate = useNavigate();
 
   const exercises = [
-    { icon: Wind, titleKey: 'mental.breathing.title', descKey: 'mental.breathing.description', durationKey: 'mental.breathing.duration', color: 'bg-primary/10 text-primary' },
-    { icon: BookHeart, titleKey: 'mental.gratitude.title', descKey: 'mental.gratitude.description', durationKey: 'mental.gratitude.duration', color: 'bg-soft/50 text-soft-dark' },
-    { icon: Brain, titleKey: 'mental.mindfulness.title', descKey: 'mental.mindfulness.description', durationKey: 'mental.mindfulness.duration', color: 'bg-lavender/30 text-lavender-dark' },
-    { icon: Lightbulb, titleKey: 'mental.reframing.title', descKey: 'mental.reframing.description', durationKey: 'mental.reframing.duration', color: 'bg-secondary/10 text-secondary' },
+    { icon: Wind, titleKey: 'mental.breathing.title', descKey: 'mental.breathing.description', durationKey: 'mental.breathing.duration', color: 'bg-primary/10 text-primary', path: '/mental/breathing' },
+    { icon: BookHeart, titleKey: 'mental.gratitude.title', descKey: 'mental.gratitude.description', durationKey: 'mental.gratitude.duration', color: 'bg-soft/50 text-soft-dark', path: null },
+    { icon: Brain, titleKey: 'mental.mindfulness.title', descKey: 'mental.mindfulness.description', durationKey: 'mental.mindfulness.duration', color: 'bg-lavender/30 text-lavender-dark', path: null },
+    { icon: Lightbulb, titleKey: 'mental.reframing.title', descKey: 'mental.reframing.description', durationKey: 'mental.reframing.duration', color: 'bg-secondary/10 text-secondary', path: null },
   ];
+
+  const handleExerciseClick = (path: string | null) => {
+    if (path) {
+      navigate(path);
+    }
+  };
 
   return (
     <PageContainer>
@@ -22,7 +30,7 @@ export default function MentalExercises() {
 
       <div className="p-6 space-y-4">
         {exercises.map((ex, i) => (
-          <CalmCard key={i} hoverable>
+          <CalmCard key={i} hoverable onClick={() => handleExerciseClick(ex.path)}>
             <div className="flex items-start gap-4">
               <div className={`p-3 rounded-xl ${ex.color}`}>
                 <ex.icon className="w-6 h-6" />
@@ -32,6 +40,9 @@ export default function MentalExercises() {
                 <p className="text-sm text-muted-foreground mt-1">{t(ex.descKey)}</p>
                 <p className="text-xs text-primary mt-2">{t(ex.durationKey)}</p>
               </div>
+              {ex.path && (
+                <ChevronRight className="w-5 h-5 text-muted-foreground self-center" />
+              )}
             </div>
           </CalmCard>
         ))}
