@@ -1,13 +1,15 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send } from 'lucide-react';
+import { Send, Mic, MicOff } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useUserProfile } from '@/hooks/useUserProfile';
 import { useChatMessages } from '@/hooks/useChatMessages';
+import { useRealtimeVoice } from '@/hooks/useRealtimeVoice';
 import { PageContainer } from '@/components/CalmComponents';
 import { ChatBubble, TypingIndicator } from '@/components/ChatBubble';
 import { CrisisSupport } from '@/components/CrisisSupport';
 import { BottomNav } from '@/components/BottomNav';
 import { Input } from '@/components/ui/input';
+import { useToast } from '@/hooks/use-toast';
 
 const CRISIS_KEYWORDS = ['suicid', 'morrer', 'matar', 'die', 'kill', 'suicide', 'end my life', 'acabar com tudo'];
 
@@ -15,10 +17,27 @@ export default function Chat() {
   const { t, language } = useLanguage();
   const { profile } = useUserProfile();
   const { messages, isLoading, setIsLoading, addMessage, updateLastAssistantMessage, getRecentMessages } = useChatMessages();
+  const { toast } = useToast();
   
   const [input, setInput] = useState('');
   const [showCrisis, setShowCrisis] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const voice = useRealtimeVoice({
+    language,
+    nickname: profile.nickname,
+    onTranscript: (text, isUser) => {
+      if (isUser) {
+        addMessage('user', text);
+        if (checkForCrisis(text)) setShowCrisis(true);
+      } else {
+        addMessage('assistant', text);
+      }
+    },
+    onError: (error) => {
+      toast({ variant: 'destructive', title: 'Erro', description: error });
+    },
+  });
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -133,16 +152,37 @@ export default function Chat() {
               onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && sendMessage()}
               placeholder={t('chat.placeholder')}
               className="flex-1"
-              disabled={isLoading}
+              disabled={isLoading || voice.isConnected}
             />
+            
+            {/* Voice button */}
+            <button
+              onClick={voice.isConnected ? voice.disconnect : voice.connect}
+              disabled={voice.isConnecting}
+              className={`p-3 rounded-xl transition-all ${
+                voice.isConnected 
+                  ? 'bg-destructive text-destructive-foreground animate-pulse' 
+                  : 'bg-secondary text-secondary-foreground hover:bg-secondary/90'
+              } disabled:opacity-50`}
+              title={voice.isConnected ? t('chat.voiceStop') : t('chat.voiceStart')}
+            >
+              {voice.isConnected ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+            </button>
+            
             <button
               onClick={sendMessage}
-              disabled={isLoading || !input.trim()}
+              disabled={isLoading || !input.trim() || voice.isConnected}
               className="p-3 bg-primary text-primary-foreground rounded-xl disabled:opacity-50"
             >
               <Send className="w-5 h-5" />
             </button>
           </div>
+          
+          {voice.isConnected && (
+            <p className="text-center text-sm text-muted-foreground mt-2 animate-pulse">
+              {voice.isSpeaking ? t('chat.speaking') : t('chat.listening')}
+            </p>
+          )}
         </div>
       </div>
 

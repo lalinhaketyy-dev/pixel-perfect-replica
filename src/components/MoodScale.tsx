@@ -8,12 +8,13 @@ interface MoodScaleProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
+// Símbolos geométricos que representam níveis de humor
 const moods = [
-  { value: 1, emoji: '😢', labelKey: 'mood.terrible' },
-  { value: 2, emoji: '😔', labelKey: 'mood.bad' },
-  { value: 3, emoji: '😐', labelKey: 'mood.neutral' },
-  { value: 4, emoji: '🙂', labelKey: 'mood.good' },
-  { value: 5, emoji: '😊', labelKey: 'mood.great' },
+  { value: 1, symbol: '◆', labelKey: 'mood.terrible', color: 'text-destructive' },
+  { value: 2, symbol: '▼', labelKey: 'mood.bad', color: 'text-orange-500' },
+  { value: 3, symbol: '●', labelKey: 'mood.neutral', color: 'text-muted-foreground' },
+  { value: 4, symbol: '▲', labelKey: 'mood.good', color: 'text-secondary' },
+  { value: 5, symbol: '★', labelKey: 'mood.great', color: 'text-primary' },
 ];
 
 export function MoodScale({ value, onChange, disabled = false, size = 'md' }: MoodScaleProps) {
@@ -43,7 +44,9 @@ export function MoodScale({ value, onChange, disabled = false, size = 'md' }: Mo
             )}
             aria-label={t(mood.labelKey)}
           >
-            <span className="block">{mood.emoji}</span>
+            <span className={cn('block', value === mood.value ? mood.color : 'text-muted-foreground')}>
+              {mood.symbol}
+            </span>
           </button>
         ))}
       </div>
@@ -55,3 +58,9 @@ export function MoodScale({ value, onChange, disabled = false, size = 'md' }: Mo
     </div>
   );
 }
+
+export function getMoodSymbol(value: number): string {
+  return moods.find((m) => m.value === value)?.symbol || '●';
+}
+
+export { moods };

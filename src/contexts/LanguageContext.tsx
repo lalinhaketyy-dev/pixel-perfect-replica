@@ -40,8 +40,13 @@ const translations: Record<Language, Record<string, string>> = {
     'chat.title': 'Chat',
     'chat.placeholder': 'Digite sua mensagem...',
     'chat.send': 'Enviar',
-    'chat.greeting': 'Olá{name}! Como você está se sentindo hoje? Estou aqui para te ouvir e apoiar. 💙',
+    'chat.greeting': 'Olá{name}! Como você está se sentindo hoje? Estou aqui para te ouvir e apoiar.',
     'chat.typing': 'Digitando...',
+    'chat.voiceStart': 'Iniciar conversa por voz',
+    'chat.voiceStop': 'Encerrar conversa por voz',
+    'chat.voiceConnecting': 'Conectando...',
+    'chat.listening': 'Ouvindo...',
+    'chat.speaking': 'Falando...',
     
     // Mental Exercises
     'mental.title': 'Exercícios Mentais',
@@ -72,6 +77,46 @@ const translations: Record<Language, Record<string, string>> = {
     'breathing.pause': 'Pausar',
     'breathing.restart': 'Recomeçar',
     'breathing.technique': 'Técnica 4-7-8 para relaxamento profundo',
+    
+    // Gratitude Journal
+    'gratitude.subtitle': 'Cultive a gratidão diariamente',
+    'gratitude.todayProgress': 'Progresso de hoje',
+    'gratitude.complete': 'Parabéns! Você completou sua prática de gratidão hoje.',
+    'gratitude.placeholder': 'Pelo que você é grato hoje?',
+    'gratitude.empty': 'Comece escrevendo sua primeira gratidão...',
+    
+    // Mindfulness
+    'mindfulness.subtitle': '15 minutos de presença plena',
+    'mindfulness.complete': 'Meditação concluída!',
+    'mindfulness.completeMessage': 'Você dedicou um momento valioso para si mesmo.',
+    'mindfulness.start': 'Iniciar',
+    'mindfulness.pause': 'Pausar',
+    'mindfulness.step1': 'Encontre uma posição confortável e feche os olhos...',
+    'mindfulness.step2': 'Observe sua respiração naturalmente, sem tentar mudá-la...',
+    'mindfulness.step3': 'Sinta seus pés no chão, seu corpo na cadeira...',
+    'mindfulness.step4': 'Quando pensamentos surgirem, apenas observe-os passar como nuvens...',
+    'mindfulness.step5': 'Traga sua atenção de volta para a respiração gentilmente...',
+    'mindfulness.step6': 'Expanda sua consciência para todo o seu corpo...',
+    'mindfulness.step7': 'Lentamente, prepare-se para retornar ao momento presente...',
+    
+    // Cognitive Reframing
+    'reframing.subtitle': 'Transforme seus pensamentos',
+    'reframing.step1.title': 'Identifique o pensamento negativo',
+    'reframing.step1.description': 'Escreva o pensamento que está te incomodando, exatamente como ele aparece na sua mente.',
+    'reframing.step1.placeholder': 'Ex: "Eu nunca vou conseguir fazer isso direito..."',
+    'reframing.step2.title': 'Examine as evidências',
+    'reframing.step2.description': 'O que as evidências reais dizem? Esse pensamento é 100% verdade?',
+    'reframing.step2.placeholder': 'Ex: "Na verdade, já consegui fazer várias coisas difíceis antes..."',
+    'reframing.step3.title': 'Reformule o pensamento',
+    'reframing.step3.description': 'Agora, reescreva o pensamento de forma mais equilibrada e realista.',
+    'reframing.step3.placeholder': 'Ex: "É desafiador, mas posso aprender e melhorar com a prática..."',
+    'reframing.yourThought': 'Seu pensamento original:',
+    'reframing.yourEvidence': 'Suas evidências:',
+    'reframing.complete': 'Transformação concluída!',
+    'reframing.completeMessage': 'Você praticou uma habilidade poderosa da TCC.',
+    'reframing.before': 'Antes',
+    'reframing.after': 'Depois',
+    'reframing.tryAnother': 'Praticar novamente',
     
     // Physical Activities
     'physical.title': 'Atividades Físicas',
@@ -156,8 +201,13 @@ const translations: Record<Language, Record<string, string>> = {
     'chat.title': 'Chat',
     'chat.placeholder': 'Type your message...',
     'chat.send': 'Send',
-    'chat.greeting': 'Hello{name}! How are you feeling today? I\'m here to listen and support you. 💙',
+    'chat.greeting': "Hello{name}! How are you feeling today? I'm here to listen and support you.",
     'chat.typing': 'Typing...',
+    'chat.voiceStart': 'Start voice conversation',
+    'chat.voiceStop': 'End voice conversation',
+    'chat.voiceConnecting': 'Connecting...',
+    'chat.listening': 'Listening...',
+    'chat.speaking': 'Speaking...',
     
     // Mental Exercises
     'mental.title': 'Mental Exercises',
@@ -188,6 +238,46 @@ const translations: Record<Language, Record<string, string>> = {
     'breathing.pause': 'Pause',
     'breathing.restart': 'Restart',
     'breathing.technique': '4-7-8 technique for deep relaxation',
+    
+    // Gratitude Journal
+    'gratitude.subtitle': 'Cultivate daily gratitude',
+    'gratitude.todayProgress': "Today's progress",
+    'gratitude.complete': 'Congratulations! You completed your gratitude practice today.',
+    'gratitude.placeholder': 'What are you grateful for today?',
+    'gratitude.empty': 'Start by writing your first gratitude...',
+    
+    // Mindfulness
+    'mindfulness.subtitle': '15 minutes of mindful presence',
+    'mindfulness.complete': 'Meditation complete!',
+    'mindfulness.completeMessage': 'You dedicated a valuable moment to yourself.',
+    'mindfulness.start': 'Start',
+    'mindfulness.pause': 'Pause',
+    'mindfulness.step1': 'Find a comfortable position and close your eyes...',
+    'mindfulness.step2': 'Observe your breathing naturally, without trying to change it...',
+    'mindfulness.step3': 'Feel your feet on the ground, your body in the chair...',
+    'mindfulness.step4': 'When thoughts arise, just watch them pass like clouds...',
+    'mindfulness.step5': 'Gently bring your attention back to your breath...',
+    'mindfulness.step6': 'Expand your awareness to your entire body...',
+    'mindfulness.step7': 'Slowly, prepare to return to the present moment...',
+    
+    // Cognitive Reframing
+    'reframing.subtitle': 'Transform your thoughts',
+    'reframing.step1.title': 'Identify the negative thought',
+    'reframing.step1.description': 'Write down the thought that is bothering you, exactly as it appears in your mind.',
+    'reframing.step1.placeholder': 'E.g., "I will never get this right..."',
+    'reframing.step2.title': 'Examine the evidence',
+    'reframing.step2.description': 'What does the real evidence say? Is this thought 100% true?',
+    'reframing.step2.placeholder': 'E.g., "Actually, I have accomplished many difficult things before..."',
+    'reframing.step3.title': 'Reframe the thought',
+    'reframing.step3.description': 'Now, rewrite the thought in a more balanced and realistic way.',
+    'reframing.step3.placeholder': 'E.g., "It is challenging, but I can learn and improve with practice..."',
+    'reframing.yourThought': 'Your original thought:',
+    'reframing.yourEvidence': 'Your evidence:',
+    'reframing.complete': 'Transformation complete!',
+    'reframing.completeMessage': 'You practiced a powerful CBT skill.',
+    'reframing.before': 'Before',
+    'reframing.after': 'After',
+    'reframing.tryAnother': 'Practice again',
     
     // Physical Activities
     'physical.title': 'Physical Activities',

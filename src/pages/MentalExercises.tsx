@@ -10,9 +10,9 @@ export default function MentalExercises() {
 
   const exercises = [
     { icon: Wind, titleKey: 'mental.breathing.title', descKey: 'mental.breathing.description', durationKey: 'mental.breathing.duration', color: 'bg-primary/10 text-primary', path: '/mental/breathing' },
-    { icon: BookHeart, titleKey: 'mental.gratitude.title', descKey: 'mental.gratitude.description', durationKey: 'mental.gratitude.duration', color: 'bg-soft/50 text-soft-dark', path: null },
-    { icon: Brain, titleKey: 'mental.mindfulness.title', descKey: 'mental.mindfulness.description', durationKey: 'mental.mindfulness.duration', color: 'bg-lavender/30 text-lavender-dark', path: null },
-    { icon: Lightbulb, titleKey: 'mental.reframing.title', descKey: 'mental.reframing.description', durationKey: 'mental.reframing.duration', color: 'bg-secondary/10 text-secondary', path: null },
+    { icon: BookHeart, titleKey: 'mental.gratitude.title', descKey: 'mental.gratitude.description', durationKey: 'mental.gratitude.duration', color: 'bg-soft/50 text-soft-dark', path: '/mental/gratitude' },
+    { icon: Brain, titleKey: 'mental.mindfulness.title', descKey: 'mental.mindfulness.description', durationKey: 'mental.mindfulness.duration', color: 'bg-lavender/30 text-lavender-dark', path: '/mental/mindfulness' },
+    { icon: Lightbulb, titleKey: 'mental.reframing.title', descKey: 'mental.reframing.description', durationKey: 'mental.reframing.duration', color: 'bg-secondary/10 text-secondary', path: '/mental/reframing' },
   ];
 
   const handleExerciseClick = (path: string | null) => {
