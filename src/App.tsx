@@ -9,6 +9,7 @@ import Welcome from "./pages/Welcome";
 import Chat from "./pages/Chat";
 import MentalExercises from "./pages/MentalExercises";
 import BreathingExercise from "./pages/BreathingExercise";
+import BoxBreathing from "./pages/BoxBreathing";
 import GratitudeJournal from "./pages/GratitudeJournal";
 import MindfulnessExercise from "./pages/MindfulnessExercise";
 import CognitiveReframing from "./pages/CognitiveReframing";
@@ -34,10 +35,11 @@ function AppRoutes() {
       <Route path="/" element={<Navigate to="/chat" replace />} />
       <Route path="/chat" element={<Chat />} />
       <Route path="/mental" element={<MentalExercises />} />
-      <Route path="/mental/breathing" element={<BreathingExercise />} />
-      <Route path="/mental/gratitude" element={<GratitudeJournal />} />
-      <Route path="/mental/mindfulness" element={<MindfulnessExercise />} />
-      <Route path="/mental/reframing" element={<CognitiveReframing />} />
+        <Route path="/mental/breathing" element={<BreathingExercise />} />
+        <Route path="/mental/box" element={<BoxBreathing />} />
+        <Route path="/mental/gratitude" element={<GratitudeJournal />} />
+        <Route path="/mental/mindfulness" element={<MindfulnessExercise />} />
+        <Route path="/mental/reframing" element={<CognitiveReframing />} />
       <Route path="/physical" element={<PhysicalActivities />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="*" element={<NotFound />} />
