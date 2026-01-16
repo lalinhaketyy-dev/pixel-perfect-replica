@@ -9,16 +9,16 @@ interface BottomNavProps {
 }
 
 export const BottomNav = forwardRef<HTMLElement, BottomNavProps>(
-  function BottomNav({ className }, ref) {
-  const { t } = useLanguage();
-  const location = useLocation();
+  ({ className }, ref) => {
+    const { t } = useLanguage();
+    const location = useLocation();
 
-  const navItems = [
-    { path: '/chat', icon: MessageCircle, labelKey: 'nav.chat' },
-    { path: '/mental', icon: Heart, labelKey: 'nav.mental' },
-    { path: '/physical', icon: Activity, labelKey: 'nav.physical' },
-    { path: '/profile', icon: User, labelKey: 'nav.profile' },
-  ];
+    const navItems = [
+      { path: '/chat', icon: MessageCircle, labelKey: 'nav.chat' },
+      { path: '/mental', icon: Heart, labelKey: 'nav.mental' },
+      { path: '/physical', icon: Activity, labelKey: 'nav.physical' },
+      { path: '/profile', icon: User, labelKey: 'nav.profile' },
+    ];
 
     return (
       <nav
@@ -59,3 +59,5 @@ export const BottomNav = forwardRef<HTMLElement, BottomNavProps>(
     );
   }
 );
+
+BottomNav.displayName = 'BottomNav';
