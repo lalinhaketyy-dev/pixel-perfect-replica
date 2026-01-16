@@ -170,6 +170,12 @@ const translations: Record<Language, Record<string, string>> = {
     'crisis.breathing': 'Enquanto isso, respire comigo...',
     'crisis.close': 'Fechar',
     
+    // Music Player
+    'music.toggle': 'Música relaxante',
+    'music.title': 'Música 432 Hz',
+    'music.description': 'Frequência de 432 Hz, conhecida como "frequência de cura universal", ajuda a relaxar o cérebro e reduzir o estresse.',
+    'music.volume': 'Volume',
+    
     // Common
     'common.back': 'Voltar',
     'common.save': 'Salvar',
@@ -334,6 +340,12 @@ const translations: Record<Language, Record<string, string>> = {
     'crisis.capsDescription': 'Find mental health services near you',
     'crisis.breathing': 'In the meantime, breathe with me...',
     'crisis.close': 'Close',
+    
+    // Music Player
+    'music.toggle': 'Relaxing music',
+    'music.title': '432 Hz Music',
+    'music.description': '432 Hz frequency, known as the "universal healing frequency", helps relax the brain and reduce stress.',
+    'music.volume': 'Volume',
     
     // Common
     'common.back': 'Back',

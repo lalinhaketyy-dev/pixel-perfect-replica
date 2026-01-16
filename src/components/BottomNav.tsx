@@ -1,3 +1,4 @@
+import { forwardRef } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { MessageCircle, Heart, Activity, User } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -7,7 +8,8 @@ interface BottomNavProps {
   className?: string;
 }
 
-export function BottomNav({ className }: BottomNavProps) {
+export const BottomNav = forwardRef<HTMLElement, BottomNavProps>(
+  function BottomNav({ className }, ref) {
   const { t } = useLanguage();
   const location = useLocation();
 
@@ -18,40 +20,42 @@ export function BottomNav({ className }: BottomNavProps) {
     { path: '/profile', icon: User, labelKey: 'nav.profile' },
   ];
 
-  return (
-    <nav
-      className={cn(
-        'fixed bottom-0 left-0 right-0 bg-card border-t border-border safe-bottom z-40',
-        className
-      )}
-    >
-      <div className="flex justify-around items-center h-16 max-w-lg mx-auto px-4">
-        {navItems.map((item) => {
-          const isActive = location.pathname === item.path;
-          const Icon = item.icon;
+    return (
+      <nav
+        ref={ref}
+        className={cn(
+          'fixed bottom-0 left-0 right-0 bg-card border-t border-border safe-bottom z-40',
+          className
+        )}
+      >
+        <div className="flex justify-around items-center h-16 max-w-lg mx-auto px-4">
+          {navItems.map((item) => {
+            const isActive = location.pathname === item.path;
+            const Icon = item.icon;
 
-          return (
-            <NavLink
-              key={item.path}
-              to={item.path}
-              className={cn(
-                'flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-colors',
-                isActive
-                  ? 'text-primary'
-                  : 'text-muted-foreground hover:text-foreground'
-              )}
-            >
-              <Icon
+            return (
+              <NavLink
+                key={item.path}
+                to={item.path}
                 className={cn(
-                  'w-6 h-6 transition-transform',
-                  isActive && 'scale-110'
+                  'flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-colors',
+                  isActive
+                    ? 'text-primary'
+                    : 'text-muted-foreground hover:text-foreground'
                 )}
-              />
-              <span className="text-xs font-medium">{t(item.labelKey)}</span>
-            </NavLink>
-          );
-        })}
-      </div>
-    </nav>
-  );
-}
+              >
+                <Icon
+                  className={cn(
+                    'w-6 h-6 transition-transform',
+                    isActive && 'scale-110'
+                  )}
+                />
+                <span className="text-xs font-medium">{t(item.labelKey)}</span>
+              </NavLink>
+            );
+          })}
+        </div>
+      </nav>
+    );
+  }
+);

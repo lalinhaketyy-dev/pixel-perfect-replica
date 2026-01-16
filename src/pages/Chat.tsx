@@ -8,6 +8,7 @@ import { PageContainer } from '@/components/CalmComponents';
 import { ChatBubble, TypingIndicator } from '@/components/ChatBubble';
 import { CrisisSupport } from '@/components/CrisisSupport';
 import { BottomNav } from '@/components/BottomNav';
+import { MusicPlayer } from '@/components/MusicPlayer';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 
@@ -132,8 +133,10 @@ export default function Chat() {
   return (
     <PageContainer>
       <div className="flex flex-col h-screen">
-        <header className="bg-card border-b border-border px-4 py-4">
+        <header className="bg-card border-b border-border px-4 py-4 flex items-center justify-between">
+          <div /> {/* Spacer */}
           <h1 className="text-xl font-bold text-center">{t('chat.title')}</h1>
+          <MusicPlayer />
         </header>
 
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
