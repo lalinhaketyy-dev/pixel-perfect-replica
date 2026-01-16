@@ -8,7 +8,7 @@ interface ChatBubbleProps {
 }
 
 export const ChatBubble = forwardRef<HTMLDivElement, ChatBubbleProps>(
-  function ChatBubble({ message, isUser, timestamp }, ref) {
+  ({ message, isUser, timestamp }, ref) => {
     return (
       <div
         ref={ref}
@@ -44,6 +44,8 @@ export const ChatBubble = forwardRef<HTMLDivElement, ChatBubbleProps>(
     );
   }
 );
+
+ChatBubble.displayName = 'ChatBubble';
 
 export function TypingIndicator() {
   return (
