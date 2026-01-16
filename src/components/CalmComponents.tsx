@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { ReactNode } from 'react';
+import { ReactNode, forwardRef } from 'react';
 
 interface CalmCardProps {
   children: ReactNode;
@@ -79,16 +79,21 @@ interface PageContainerProps {
   withBottomNav?: boolean;
 }
 
-export function PageContainer({ children, className, withBottomNav = true }: PageContainerProps) {
-  return (
-    <div
-      className={cn(
-        'min-h-screen bg-background',
-        withBottomNav && 'pb-20',
-        className
-      )}
-    >
-      {children}
-    </div>
-  );
-}
+export const PageContainer = forwardRef<HTMLDivElement, PageContainerProps>(
+  ({ children, className, withBottomNav = true }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          'min-h-screen bg-background',
+          withBottomNav && 'pb-20',
+          className
+        )}
+      >
+        {children}
+      </div>
+    );
+  }
+);
+
+PageContainer.displayName = 'PageContainer';
