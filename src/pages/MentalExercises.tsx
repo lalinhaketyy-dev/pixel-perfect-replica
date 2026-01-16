@@ -1,4 +1,4 @@
-import { Wind, BookHeart, Brain, Lightbulb, ChevronRight } from 'lucide-react';
+import { Wind, BookHeart, Brain, Lightbulb, ChevronRight, Square } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { PageContainer, CalmCard } from '@/components/CalmComponents';
@@ -10,9 +10,10 @@ export default function MentalExercises() {
 
   const exercises = [
     { icon: Wind, titleKey: 'mental.breathing.title', descKey: 'mental.breathing.description', durationKey: 'mental.breathing.duration', color: 'bg-primary/10 text-primary', path: '/mental/breathing' },
+    { icon: Square, titleKey: 'mental.box.title', descKey: 'mental.box.description', durationKey: 'mental.box.duration', color: 'bg-secondary/10 text-secondary', path: '/mental/box' },
     { icon: BookHeart, titleKey: 'mental.gratitude.title', descKey: 'mental.gratitude.description', durationKey: 'mental.gratitude.duration', color: 'bg-soft/50 text-soft-dark', path: '/mental/gratitude' },
     { icon: Brain, titleKey: 'mental.mindfulness.title', descKey: 'mental.mindfulness.description', durationKey: 'mental.mindfulness.duration', color: 'bg-lavender/30 text-lavender-dark', path: '/mental/mindfulness' },
-    { icon: Lightbulb, titleKey: 'mental.reframing.title', descKey: 'mental.reframing.description', durationKey: 'mental.reframing.duration', color: 'bg-secondary/10 text-secondary', path: '/mental/reframing' },
+    { icon: Lightbulb, titleKey: 'mental.reframing.title', descKey: 'mental.reframing.description', durationKey: 'mental.reframing.duration', color: 'bg-accent/20 text-accent-foreground', path: '/mental/reframing' },
   ];
 
   const handleExerciseClick = (path: string | null) => {
