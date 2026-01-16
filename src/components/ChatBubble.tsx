@@ -1,3 +1,4 @@
+import { forwardRef } from 'react';
 import { cn } from '@/lib/utils';
 
 interface ChatBubbleProps {
@@ -6,40 +7,43 @@ interface ChatBubbleProps {
   timestamp?: string;
 }
 
-export function ChatBubble({ message, isUser, timestamp }: ChatBubbleProps) {
-  return (
-    <div
-      className={cn(
-        'flex animate-slide-up',
-        isUser ? 'justify-end' : 'justify-start'
-      )}
-    >
+export const ChatBubble = forwardRef<HTMLDivElement, ChatBubbleProps>(
+  function ChatBubble({ message, isUser, timestamp }, ref) {
+    return (
       <div
+        ref={ref}
         className={cn(
-          'max-w-[85%] md:max-w-[70%] rounded-2xl px-4 py-3 shadow-sm',
-          isUser
-            ? 'bg-primary text-primary-foreground rounded-br-sm'
-            : 'bg-card text-card-foreground rounded-bl-sm'
+          'flex animate-slide-up',
+          isUser ? 'justify-end' : 'justify-start'
         )}
       >
-        <p className="text-sm md:text-base whitespace-pre-wrap">{message}</p>
-        {timestamp && (
-          <p
-            className={cn(
-              'text-xs mt-1 opacity-70',
-              isUser ? 'text-right' : 'text-left'
-            )}
-          >
-            {new Date(timestamp).toLocaleTimeString([], {
-              hour: '2-digit',
-              minute: '2-digit',
-            })}
-          </p>
-        )}
+        <div
+          className={cn(
+            'max-w-[85%] md:max-w-[70%] rounded-2xl px-4 py-3 shadow-sm',
+            isUser
+              ? 'bg-primary text-primary-foreground rounded-br-sm'
+              : 'bg-card text-card-foreground rounded-bl-sm'
+          )}
+        >
+          <p className="text-sm md:text-base whitespace-pre-wrap">{message}</p>
+          {timestamp && (
+            <p
+              className={cn(
+                'text-xs mt-1 opacity-70',
+                isUser ? 'text-right' : 'text-left'
+              )}
+            >
+              {new Date(timestamp).toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+              })}
+            </p>
+          )}
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
+);
 
 export function TypingIndicator() {
   return (
