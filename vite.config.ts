@@ -20,8 +20,8 @@ export default defineConfig(({ mode }) => ({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'robots.txt'],
       manifest: {
-        name: 'MindBody - Bem-estar Mental',
-        short_name: 'MindBody',
+        name: 'Mindbody IA - Bem-estar Mental',
+        short_name: 'Mindbody IA',
         description: 'Seu companheiro de bem-estar mental com IA empática',
         theme_color: '#4A90A4',
         background_color: '#F7F5F2',
