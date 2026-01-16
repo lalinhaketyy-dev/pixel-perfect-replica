@@ -14,7 +14,7 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 const translations: Record<Language, Record<string, string>> = {
   pt: {
     // Welcome & Onboarding
-    'welcome.title': 'Bem-vindo ao MindBody AI',
+    'welcome.title': 'Bem-vindo ao Mindbody IA',
     'welcome.subtitle': 'Seu companheiro de bem-estar mental',
     'welcome.description': 'Estou aqui para te ajudar a cuidar da sua saúde mental com conversas acolhedoras, exercícios de mindfulness e apoio quando você precisar.',
     'welcome.start': 'Começar',
@@ -147,7 +147,7 @@ const translations: Record<Language, Record<string, string>> = {
     'profile.clearHistory': 'Limpar Histórico',
     'profile.clearHistoryConfirm': 'Tem certeza? Isso apagará todas as suas conversas.',
     'profile.about': 'Sobre',
-    'profile.aboutText': 'O MindBody AI é um companheiro de bem-estar mental. Este aplicativo não substitui ajuda profissional. Se você está em crise, procure um profissional de saúde mental.',
+    'profile.aboutText': 'O Mindbody IA é um companheiro de bem-estar mental. Este aplicativo não substitui ajuda profissional. Se você está em crise, procure um profissional de saúde mental.',
     'profile.privacy': 'Privacidade',
     'profile.privacyText': 'Suas conversas são armazenadas localmente no seu dispositivo.',
     
@@ -179,7 +179,7 @@ const translations: Record<Language, Record<string, string>> = {
   },
   en: {
     // Welcome & Onboarding
-    'welcome.title': 'Welcome to MindBody AI',
+    'welcome.title': 'Welcome to Mindbody IA',
     'welcome.subtitle': 'Your mental wellness companion',
     'welcome.description': "I'm here to help you take care of your mental health with supportive conversations, mindfulness exercises, and support when you need it.",
     'welcome.start': 'Get Started',
@@ -312,7 +312,7 @@ const translations: Record<Language, Record<string, string>> = {
     'profile.clearHistory': 'Clear History',
     'profile.clearHistoryConfirm': 'Are you sure? This will delete all your conversations.',
     'profile.about': 'About',
-    'profile.aboutText': 'MindBody AI is a mental wellness companion. This app does not replace professional help. If you are in crisis, please seek a mental health professional.',
+    'profile.aboutText': 'Mindbody IA is a mental wellness companion. This app does not replace professional help. If you are in crisis, please seek a mental health professional.',
     'profile.privacy': 'Privacy',
     'profile.privacyText': 'Your conversations are stored locally on your device.',
     
