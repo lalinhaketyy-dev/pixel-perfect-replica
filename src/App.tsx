@@ -4,7 +4,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { MusicProvider } from "@/contexts/MusicContext";
 import { useUserProfile } from "@/hooks/useUserProfile";
+import { GlobalMusicPlayer } from "@/components/GlobalMusicPlayer";
 import Welcome from "./pages/Welcome";
 import Chat from "./pages/Chat";
 import MentalExercises from "./pages/MentalExercises";
@@ -47,16 +49,32 @@ function AppRoutes() {
   );
 }
 
+// Floating music indicator
+function FloatingMusicIndicator() {
+  const { profile } = useUserProfile();
+  
+  if (!profile.hasCompletedOnboarding) return null;
+  
+  return (
+    <div className="fixed top-4 right-4 z-50">
+      <GlobalMusicPlayer minimal />
+    </div>
+  );
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <LanguageProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <AppRoutes />
-        </BrowserRouter>
-      </TooltipProvider>
+      <MusicProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <FloatingMusicIndicator />
+            <AppRoutes />
+          </BrowserRouter>
+        </TooltipProvider>
+      </MusicProvider>
     </LanguageProvider>
   </QueryClientProvider>
 );

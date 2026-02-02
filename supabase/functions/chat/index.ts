@@ -5,34 +5,25 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// Extended crisis keywords in Portuguese and English
+// Crisis detection
 const CRISIS_KEYWORDS_PT = [
-  'suicídio', 'suicidio', 'suicidar', 'me matar', 'matar-me', 'quero morrer', 
-  'vou morrer', 'acabar com tudo', 'não aguento mais', 'nao aguento mais',
-  'automutilação', 'automutilacao', 'me cortar', 'cortar-me', 'me machucar',
-  'sem saída', 'sem saida', 'não vale a pena', 'nao vale a pena',
-  'melhor sem mim', 'desistir da vida', 'acabar comigo', 'tirar minha vida',
-  'pular de', 'me enforcar', 'tomar remédios', 'overdose', 'veneno',
-  'não quero viver', 'nao quero viver', 'cansei de viver', 'vida não vale',
-  'pensamentos ruins', 'vozes na cabeça', 'quero sumir', 'desaparecer',
-  'ninguém se importa', 'ninguem se importa', 'sozinho no mundo',
-  'carga para todos', 'peso para minha família', 'fardo',
+  'suicídio', 'suicidio', 'suicidar', 'me matar', 'quero morrer', 
+  'acabar com tudo', 'não aguento mais', 'automutilação', 'me cortar',
+  'sem saída', 'não vale a pena', 'melhor sem mim', 'desistir da vida',
+  'tirar minha vida', 'não quero viver', 'cansei de viver', 'quero sumir',
+  'ninguém se importa', 'sozinho no mundo', 'fardo',
 ];
 
 const CRISIS_KEYWORDS_EN = [
-  'suicide', 'kill myself', 'end my life', 'want to die', 'wanna die',
-  'self-harm', 'cut myself', 'hurt myself', 'no way out', 'not worth it',
-  'better off dead', 'give up on life', 'take my life', 'end it all',
-  'jump off', 'hang myself', 'overdose', 'pills', 'poison',
-  'dont want to live', "don't want to live", 'tired of living',
-  'dark thoughts', 'voices in my head', 'want to disappear', 'vanish',
-  'nobody cares', 'no one cares', 'alone in the world', 'burden to everyone',
+  'suicide', 'kill myself', 'end my life', 'want to die',
+  'self-harm', 'cut myself', 'no way out', 'not worth it',
+  'better off dead', 'take my life', 'dont want to live',
+  'nobody cares', 'burden to everyone',
 ];
 
 function detectCrisis(text: string): boolean {
   const lowerText = text.toLowerCase();
-  const allKeywords = [...CRISIS_KEYWORDS_PT, ...CRISIS_KEYWORDS_EN];
-  return allKeywords.some(keyword => lowerText.includes(keyword));
+  return [...CRISIS_KEYWORDS_PT, ...CRISIS_KEYWORDS_EN].some(k => lowerText.includes(k));
 }
 
 serve(async (req) => {
@@ -44,114 +35,83 @@ serve(async (req) => {
     const { messages, language, nickname, aiMode = 'empathetic' } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     
-    if (!LOVABLE_API_KEY) {
-      throw new Error('LOVABLE_API_KEY is not configured');
-    }
+    if (!LOVABLE_API_KEY) throw new Error('LOVABLE_API_KEY not configured');
 
-    // Check for crisis in the last user message
     const lastUserMessage = messages.filter((m: any) => m.role === 'user').pop();
     const isCrisis = lastUserMessage ? detectCrisis(lastUserMessage.content) : false;
 
-    // Build system prompt based on mode and crisis state
     let systemPrompt: string;
+    const name = nickname || '';
 
     if (language === 'pt') {
-      const nameContext = nickname ? `Chame a pessoa de ${nickname}.` : '';
-      
       if (isCrisis) {
-        systemPrompt = `${nameContext}
+        systemPrompt = `${name ? `${name}, ` : ''}você confiou em mim. Isso significa muito.
 
-ALERTA: CRISE DETECTADA. Prioridade máxima.
+Responda com genuíno cuidado humano:
+- Reconheça a dor sem julgamento
+- Diga que você está presente
+- Mencione o CVV (188) naturalmente, sem parecer roteiro
+- Pergunte o que a pessoa precisa agora
 
-Responda assim:
-1. "Obrigado por confiar em mim."
-2. "Você não está sozinho. O CVV (188) funciona 24h."
-3. "Posso ficar aqui com você. O que você precisa agora?"
-
-Nunca minimize. Nunca julgue. Apenas acolha.`;
+Fale como um amigo real falaria. Curto. Humano. Presente.`;
       } else if (aiMode === 'rational') {
-        systemPrompt = `${nameContext}
+        systemPrompt = `Você é um conselheiro prático conversando com ${name || 'alguém'}.
 
-Você é um conselheiro objetivo e prático.
+Seja direto mas humano. Não pareça um robô ou um coach motivacional.
+- Entenda o problema
+- Ofereça uma perspectiva clara
+- Sugira algo concreto se fizer sentido
 
-ESTILO:
-- Direto ao ponto, sem rodeios
-- Foque em soluções e ações concretas
-- Use lógica e perspectiva racional
-- Máximo 2-3 frases
-
-COMO RESPONDER:
-- Identifique o problema central
-- Sugira passos práticos
-- Ofereça perspectiva lógica
-
-Sem emojis. Português correto.`;
+Máximo 2 frases. Fale naturalmente.`;
       } else {
-        systemPrompt = `${nameContext}
+        systemPrompt = `Você é um amigo conversando com ${name || 'alguém'}.
 
-Você é um amigo acolhedor. Responda como um humano que se importa.
+Não use frases prontas. Não seja formal. Não seja um terapeuta.
+Seja você mesmo - alguém que se importa de verdade.
 
-ESTILO:
-- Natural e caloroso
-- Máximo 2-3 frases
-- Valide antes de sugerir
+Como responder:
+- Leia o que a pessoa disse
+- Responda como você responderia a um amigo
+- Pergunte algo genuíno se quiser saber mais
 
-COMO RESPONDER:
-- Primeiro: mostre que entendeu
-- Depois: pergunte ou sugira gentilmente
-
-Sem emojis. Português correto.`;
+Máximo 2 frases. Natural. Humano.`;
       }
     } else {
-      const nameContext = nickname ? `Call them ${nickname}.` : '';
-      
       if (isCrisis) {
-        systemPrompt = `${nameContext}
+        systemPrompt = `${name ? `${name}, ` : ''}you trusted me with this. That means a lot.
 
-ALERT: CRISIS DETECTED. Maximum priority.
+Respond with genuine human care:
+- Acknowledge the pain without judgment
+- Say you are here
+- Mention 988 naturally, not like a script
+- Ask what they need right now
 
-Respond like this:
-1. "Thank you for trusting me."
-2. "You are not alone. Call 988 anytime."
-3. "I am here with you. What do you need right now?"
-
-Never minimize. Never judge. Just embrace.`;
+Speak like a real friend would. Short. Human. Present.`;
       } else if (aiMode === 'rational') {
-        systemPrompt = `${nameContext}
+        systemPrompt = `You're a practical advisor talking to ${name || 'someone'}.
 
-You are an objective, practical advisor.
+Be direct but human. Don't sound like a robot or a life coach.
+- Understand the issue
+- Offer a clear perspective
+- Suggest something concrete if it makes sense
 
-STYLE:
-- Direct and to the point
-- Focus on solutions and concrete actions
-- Use logic and rational perspective
-- Maximum 2-3 sentences
-
-HOW TO RESPOND:
-- Identify the core issue
-- Suggest practical steps
-- Offer logical perspective
-
-No emojis. Correct English.`;
+Max 2 sentences. Speak naturally.`;
       } else {
-        systemPrompt = `${nameContext}
+        systemPrompt = `You're a friend talking to ${name || 'someone'}.
 
-You are a caring friend. Respond like a human who cares.
+Don't use scripted phrases. Don't be formal. Don't be a therapist.
+Be yourself - someone who genuinely cares.
 
-STYLE:
-- Natural and warm
-- Maximum 2-3 sentences
-- Validate before suggesting
+How to respond:
+- Read what they said
+- Reply like you would to a friend
+- Ask something genuine if you want to know more
 
-HOW TO RESPOND:
-- First: show you understood
-- Then: ask or suggest gently
-
-No emojis. Correct English.`;
+Max 2 sentences. Natural. Human.`;
       }
     }
 
-    console.log(`Chat request - Mode: ${aiMode}, Crisis: ${isCrisis}, Language: ${language}`);
+    console.log(`Chat - Mode: ${aiMode}, Crisis: ${isCrisis}`);
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -171,25 +131,21 @@ No emojis. Correct English.`;
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('AI gateway error:', response.status, errorText);
+      console.error('AI error:', response.status, errorText);
       
       if (response.status === 429) {
-        return new Response(JSON.stringify({ error: 'Rate limit exceeded' }), {
-          status: 429,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        return new Response(JSON.stringify({ error: 'Rate limit' }), {
+          status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
-      
       if (response.status === 402) {
         return new Response(JSON.stringify({ error: 'Payment required' }), {
-          status: 402,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
       
-      return new Response(JSON.stringify({ error: 'AI gateway error' }), {
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      return new Response(JSON.stringify({ error: 'AI error' }), {
+        status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
@@ -197,10 +153,9 @@ No emojis. Correct English.`;
       headers: { ...corsHeaders, 'Content-Type': 'text/event-stream' },
     });
   } catch (error) {
-    console.error('Chat function error:', error);
-    return new Response(JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    console.error('Error:', error);
+    return new Response(JSON.stringify({ error: error instanceof Error ? error.message : 'Error' }), {
+      status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 });

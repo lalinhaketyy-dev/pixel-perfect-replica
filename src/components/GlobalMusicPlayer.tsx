@@ -1,5 +1,5 @@
-import { Volume2, VolumeX, Music } from 'lucide-react';
-import { useRelaxingMusic } from '@/hooks/useRelaxingMusic';
+import { Volume2, VolumeX } from 'lucide-react';
+import { useMusic } from '@/contexts/MusicContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
@@ -9,28 +9,49 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 
-interface MusicPlayerProps {
+interface GlobalMusicPlayerProps {
   className?: string;
+  minimal?: boolean;
 }
 
-export function MusicPlayer({ className }: MusicPlayerProps) {
-  const { isPlaying, volume, toggle, setVolume } = useRelaxingMusic();
-  const { t } = useLanguage();
+export function GlobalMusicPlayer({ className, minimal = false }: GlobalMusicPlayerProps) {
+  const { isPlaying, volume, toggle, setVolume } = useMusic();
+  const { language } = useLanguage();
+
+  if (minimal) {
+    return (
+      <button
+        onClick={toggle}
+        className={cn(
+          'p-2 rounded-full transition-all',
+          isPlaying 
+            ? 'bg-primary/20 text-primary' 
+            : 'text-muted-foreground hover:text-foreground hover:bg-muted/50',
+          className
+        )}
+        title={isPlaying ? '432 Hz' : (language === 'pt' ? 'Ativar ondas 432Hz' : 'Enable 432Hz waves')}
+      >
+        {isPlaying ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+      </button>
+    );
+  }
 
   return (
     <Popover>
       <PopoverTrigger asChild>
         <button
           className={cn(
-            'p-2 rounded-xl transition-all',
+            'p-2 rounded-xl transition-all flex items-center gap-2',
             isPlaying 
               ? 'bg-primary/20 text-primary' 
               : 'text-muted-foreground hover:text-foreground hover:bg-muted/50',
             className
           )}
-          title={t('music.toggle')}
         >
-          <Music className={cn('w-5 h-5', isPlaying && 'animate-pulse')} />
+          {isPlaying ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+          {isPlaying && (
+            <span className="text-xs font-medium hidden sm:inline">432 Hz</span>
+          )}
         </button>
       </PopoverTrigger>
       <PopoverContent className="w-72" align="end">
@@ -41,7 +62,9 @@ export function MusicPlayer({ className }: MusicPlayerProps) {
                 'w-2 h-2 rounded-full',
                 isPlaying ? 'bg-primary animate-pulse' : 'bg-muted-foreground'
               )} />
-              <span className="text-sm font-medium">{t('music.title')}</span>
+              <span className="text-sm font-medium">
+                {language === 'pt' ? 'Ondas 432 Hz' : '432 Hz Waves'}
+              </span>
             </div>
             <button
               onClick={toggle}
@@ -57,11 +80,16 @@ export function MusicPlayer({ className }: MusicPlayerProps) {
           </div>
           
           <p className="text-xs text-muted-foreground">
-            {isPlaying ? t('music.playing') : t('music.description')}
+            {isPlaying 
+              ? (language === 'pt' ? 'Ondas de calmaria tocando...' : 'Calming waves playing...')
+              : (language === 'pt' ? 'Frequência de 432 Hz para relaxamento profundo' : '432 Hz frequency for deep relaxation')
+            }
           </p>
           
           <div className="space-y-2">
-            <span className="text-xs text-muted-foreground">{t('music.volume')}</span>
+            <span className="text-xs text-muted-foreground">
+              {language === 'pt' ? 'Volume' : 'Volume'}
+            </span>
             <Slider
               value={[volume * 100]}
               onValueChange={(value) => setVolume(value[0] / 100)}

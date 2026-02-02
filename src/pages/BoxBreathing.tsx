@@ -1,15 +1,24 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowLeft, Play, Pause, RotateCcw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useMusic } from '@/contexts/MusicContext';
 import { PageContainer, CalmButton } from '@/components/CalmComponents';
 import { BoxBreathingCircle } from '@/components/BoxBreathingCircle';
 
 export default function BoxBreathing() {
   const { t } = useLanguage();
   const navigate = useNavigate();
+  const { isPlaying, play } = useMusic();
   const [isActive, setIsActive] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
+
+  // Auto-start music when exercise starts
+  useEffect(() => {
+    if (isActive && !isPlaying) {
+      play();
+    }
+  }, [isActive, isPlaying, play]);
 
   const handleComplete = () => {
     setIsActive(false);
