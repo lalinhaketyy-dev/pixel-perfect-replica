@@ -33,10 +33,16 @@ export function MusicPlayer({ className }: MusicPlayerProps) {
           <Music className={cn('w-5 h-5', isPlaying && 'animate-pulse')} />
         </button>
       </PopoverTrigger>
-      <PopoverContent className="w-64" align="end">
+      <PopoverContent className="w-72" align="end">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium">{t('music.title')}</span>
+            <div className="flex items-center gap-2">
+              <div className={cn(
+                'w-2 h-2 rounded-full',
+                isPlaying ? 'bg-primary animate-pulse' : 'bg-muted-foreground'
+              )} />
+              <span className="text-sm font-medium">{t('music.title')}</span>
+            </div>
             <button
               onClick={toggle}
               className={cn(
@@ -51,7 +57,7 @@ export function MusicPlayer({ className }: MusicPlayerProps) {
           </div>
           
           <p className="text-xs text-muted-foreground">
-            {t('music.description')}
+            {isPlaying ? t('music.playing') : t('music.description')}
           </p>
           
           <div className="space-y-2">
