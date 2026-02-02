@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, Mic, MicOff } from 'lucide-react';
+import { Send, Mic, MicOff, Brain, Heart } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { useUserProfile } from '@/hooks/useUserProfile';
+import { useUserProfile, AIMode } from '@/hooks/useUserProfile';
 import { useChatMessages } from '@/hooks/useChatMessages';
 import { useRealtimeVoice } from '@/hooks/useRealtimeVoice';
 import { PageContainer } from '@/components/CalmComponents';
@@ -11,12 +11,29 @@ import { BottomNav } from '@/components/BottomNav';
 import { MusicPlayer } from '@/components/MusicPlayer';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 
-const CRISIS_KEYWORDS = ['suicid', 'morrer', 'matar', 'die', 'kill', 'suicide', 'end my life', 'acabar com tudo'];
+// Extended crisis keywords
+const CRISIS_KEYWORDS = [
+  // Portuguese
+  'suicídio', 'suicidio', 'suicidar', 'me matar', 'matar-me', 'quero morrer', 
+  'vou morrer', 'acabar com tudo', 'não aguento mais', 'nao aguento mais',
+  'automutilação', 'automutilacao', 'me cortar', 'cortar-me', 'me machucar',
+  'sem saída', 'sem saida', 'não vale a pena', 'nao vale a pena',
+  'melhor sem mim', 'desistir da vida', 'acabar comigo', 'tirar minha vida',
+  'não quero viver', 'nao quero viver', 'cansei de viver',
+  'quero sumir', 'desaparecer', 'ninguém se importa', 'ninguem se importa',
+  // English
+  'suicide', 'kill myself', 'end my life', 'want to die', 'wanna die',
+  'self-harm', 'cut myself', 'hurt myself', 'no way out', 'not worth it',
+  'better off dead', 'give up on life', 'take my life', 'end it all',
+  'dont want to live', "don't want to live", 'tired of living',
+  'nobody cares', 'no one cares', 'burden to everyone',
+];
 
 export default function Chat() {
   const { t, language } = useLanguage();
-  const { profile } = useUserProfile();
+  const { profile, setAIMode } = useUserProfile();
   const { messages, isLoading, setIsLoading, addMessage, updateLastAssistantMessage, getRecentMessages } = useChatMessages();
   const { toast } = useToast();
   
@@ -46,8 +63,13 @@ export default function Chat() {
 
   useEffect(() => {
     if (messages.length === 0) {
-      const nameText = profile.nickname ? `, ${profile.nickname}` : '';
-      const greeting = t('chat.greeting').replace('{name}', nameText);
+      const greeting = language === 'pt' 
+        ? profile.nickname 
+          ? `Olá, ${profile.nickname}! Como posso ajudar?` 
+          : 'Olá! Como posso ajudar?'
+        : profile.nickname 
+          ? `Hi, ${profile.nickname}! How can I help?` 
+          : 'Hi! How can I help?';
       addMessage('assistant', greeting);
     }
   }, []);
@@ -87,10 +109,16 @@ export default function Chat() {
           messages: recentMessages,
           language,
           nickname: profile.nickname,
+          aiMode: profile.aiMode,
         }),
       });
 
-      if (!response.ok) throw new Error('Failed to get response');
+      if (!response.ok) {
+        if (response.status === 429) {
+          throw new Error(language === 'pt' ? 'Muitas mensagens. Aguarde um momento.' : 'Too many messages. Please wait.');
+        }
+        throw new Error('Failed to get response');
+      }
 
       const reader = response.body?.getReader();
       const decoder = new TextDecoder();
@@ -122,20 +150,53 @@ export default function Chat() {
       }
     } catch (error) {
       console.error('Chat error:', error);
-      updateLastAssistantMessage(language === 'pt' 
-        ? 'Desculpe, ocorreu um erro. Por favor, tente novamente.' 
-        : 'Sorry, an error occurred. Please try again.');
+      const errorMsg = error instanceof Error ? error.message : (language === 'pt' ? 'Erro. Tente novamente.' : 'Error. Try again.');
+      updateLastAssistantMessage(errorMsg);
     } finally {
       setIsLoading(false);
     }
   };
 
+  const toggleAIMode = () => {
+    const newMode: AIMode = profile.aiMode === 'empathetic' ? 'rational' : 'empathetic';
+    setAIMode(newMode);
+    toast({
+      title: language === 'pt' 
+        ? (newMode === 'empathetic' ? 'Modo Empático' : 'Modo Racional')
+        : (newMode === 'empathetic' ? 'Empathetic Mode' : 'Rational Mode'),
+      description: language === 'pt'
+        ? (newMode === 'empathetic' ? 'IA acolhedora e calorosa' : 'IA direta e prática')
+        : (newMode === 'empathetic' ? 'Warm and caring AI' : 'Direct and practical AI'),
+    });
+  };
+
   return (
     <PageContainer>
       <div className="flex flex-col h-screen">
-        <header className="bg-card border-b border-border px-4 py-4 flex items-center justify-between">
-          <div /> {/* Spacer */}
-          <h1 className="text-xl font-bold text-center">{t('chat.title')}</h1>
+        <header className="bg-card border-b border-border px-4 py-3 flex items-center justify-between">
+          <button
+            onClick={toggleAIMode}
+            className={cn(
+              'p-2 rounded-xl transition-all flex items-center gap-2',
+              profile.aiMode === 'empathetic' 
+                ? 'bg-primary/10 text-primary' 
+                : 'bg-secondary/50 text-secondary-foreground'
+            )}
+            title={profile.aiMode === 'empathetic' ? t('chat.modeEmpathetic') : t('chat.modeRational')}
+          >
+            {profile.aiMode === 'empathetic' ? (
+              <Heart className="w-5 h-5" />
+            ) : (
+              <Brain className="w-5 h-5" />
+            )}
+            <span className="text-xs font-medium hidden sm:inline">
+              {language === 'pt' 
+                ? (profile.aiMode === 'empathetic' ? 'Empático' : 'Racional')
+                : (profile.aiMode === 'empathetic' ? 'Empathetic' : 'Rational')
+              }
+            </span>
+          </button>
+          <h1 className="text-lg font-bold">Chat</h1>
           <MusicPlayer />
         </header>
 
@@ -153,20 +214,21 @@ export default function Chat() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && sendMessage()}
-              placeholder={t('chat.placeholder')}
+              placeholder={language === 'pt' ? 'Como você está?' : 'How are you?'}
               className="flex-1"
               disabled={isLoading || voice.isConnected}
             />
             
-            {/* Voice button */}
             <button
               onClick={voice.isConnected ? voice.disconnect : voice.connect}
               disabled={voice.isConnecting}
-              className={`p-3 rounded-xl transition-all ${
+              className={cn(
+                'p-3 rounded-xl transition-all',
                 voice.isConnected 
                   ? 'bg-destructive text-destructive-foreground animate-pulse' 
-                  : 'bg-secondary text-secondary-foreground hover:bg-secondary/90'
-              } disabled:opacity-50`}
+                  : 'bg-secondary text-secondary-foreground hover:bg-secondary/90',
+                'disabled:opacity-50'
+              )}
               title={voice.isConnected ? t('chat.voiceStop') : t('chat.voiceStart')}
             >
               {voice.isConnected ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
