@@ -1,13 +1,28 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { useLocalStorage } from './useLocalStorage';
+import React, { createContext, useContext, useState, useRef, useEffect, useCallback, ReactNode } from 'react';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 
-// 432 Hz is known as the "universal healing frequency" 
-// Combined with binaural beats and nature-inspired wave patterns for deep relaxation
 const BASE_FREQUENCY = 432;
 
-export function useRelaxingMusic() {
+interface MusicContextType {
+  isPlaying: boolean;
+  volume: number;
+  play: () => void;
+  stop: () => void;
+  toggle: () => void;
+  setVolume: (volume: number) => void;
+}
+
+const MusicContext = createContext<MusicContextType | undefined>(undefined);
+
+interface MusicProviderProps {
+  children: ReactNode;
+}
+
+export function MusicProvider({ children }: MusicProviderProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolumeState] = useLocalStorage<number>('mindbody-music-volume', 0.15);
+  const [autoPlay] = useLocalStorage<boolean>('mindbody-music-autoplay', true);
+  
   const audioContextRef = useRef<AudioContext | null>(null);
   const nodesRef = useRef<{
     oscillators: OscillatorNode[];
@@ -28,7 +43,7 @@ export function useRelaxingMusic() {
     const oscillators: OscillatorNode[] = [];
     const gains: GainNode[] = [];
     
-    // Main 432 Hz tone - the healing frequency
+    // Main 432 Hz tone
     const osc432 = ctx.createOscillator();
     osc432.type = 'sine';
     osc432.frequency.setValueAtTime(BASE_FREQUENCY, ctx.currentTime);
@@ -39,7 +54,7 @@ export function useRelaxingMusic() {
     oscillators.push(osc432);
     gains.push(gain432);
 
-    // Subtle harmonic at 216 Hz (sub-octave) for depth
+    // Sub-octave 216 Hz
     const oscSub = ctx.createOscillator();
     oscSub.type = 'sine';
     oscSub.frequency.setValueAtTime(BASE_FREQUENCY / 2, ctx.currentTime);
@@ -50,7 +65,7 @@ export function useRelaxingMusic() {
     oscillators.push(oscSub);
     gains.push(gainSub);
 
-    // High harmonic at 864 Hz for brightness
+    // High harmonic 864 Hz
     const oscHigh = ctx.createOscillator();
     oscHigh.type = 'sine';
     oscHigh.frequency.setValueAtTime(BASE_FREQUENCY * 2, ctx.currentTime);
@@ -61,8 +76,7 @@ export function useRelaxingMusic() {
     oscillators.push(oscHigh);
     gains.push(gainHigh);
 
-    // Binaural beat component: 432 Hz in one channel, 440 Hz slight difference
-    // Creates a perceived 8 Hz theta wave (relaxation/meditation state)
+    // Binaural 8 Hz theta
     const oscBinaural = ctx.createOscillator();
     oscBinaural.type = 'sine';
     oscBinaural.frequency.setValueAtTime(BASE_FREQUENCY + 8, ctx.currentTime);
@@ -73,52 +87,35 @@ export function useRelaxingMusic() {
     oscillators.push(oscBinaural);
     gains.push(gainBinaural);
 
-    // Create LFO for wave-like modulation (simulates ocean waves)
+    // LFO for wave modulation
     const lfo = ctx.createOscillator();
     lfo.type = 'sine';
-    lfo.frequency.setValueAtTime(0.1, ctx.currentTime); // Very slow wave: 6 seconds per cycle
+    lfo.frequency.setValueAtTime(0.1, ctx.currentTime);
     
     const lfoGain = ctx.createGain();
     lfoGain.gain.setValueAtTime(volume * 0.3, ctx.currentTime);
     lfo.connect(lfoGain);
 
-    // Master gain for overall volume and wave modulation
     const masterGain = ctx.createGain();
     masterGain.gain.setValueAtTime(0, ctx.currentTime);
 
-    // Connect all oscillator gains to master
     gains.forEach(gain => gain.connect(masterGain));
-    
-    // Connect LFO to modulate master gain for wave effect
     lfoGain.connect(masterGain.gain);
-    
-    // Connect to output
     masterGain.connect(ctx.destination);
 
-    // Store references
-    nodesRef.current = {
-      oscillators,
-      gains,
-      masterGain,
-      lfo
-    };
+    nodesRef.current = { oscillators, gains, masterGain, lfo };
 
-    // Start all oscillators
     oscillators.forEach(osc => osc.start());
     lfo.start();
 
-    // Smooth fade in over 3 seconds
     masterGain.gain.setValueAtTime(0, ctx.currentTime);
     masterGain.gain.linearRampToValueAtTime(1, ctx.currentTime + 3);
 
-    // Add subtle frequency modulation for organic feel
     const modulateFrequency = () => {
       if (!audioContextRef.current || !nodesRef.current.oscillators.length) return;
       
       const time = audioContextRef.current.currentTime;
       const mainOsc = nodesRef.current.oscillators[0];
-      
-      // Very subtle pitch drift (±0.5 Hz) for organic sound
       const drift = Math.sin(time * 0.3) * 0.5;
       mainOsc.frequency.setValueAtTime(BASE_FREQUENCY + drift, time);
       
@@ -126,12 +123,10 @@ export function useRelaxingMusic() {
     };
     
     modulateFrequency();
-
   }, [volume]);
 
   const play = useCallback(() => {
     if (isPlaying) return;
-    
     createAudioNodes();
     setIsPlaying(true);
   }, [isPlaying, createAudioNodes]);
@@ -142,23 +137,16 @@ export function useRelaxingMusic() {
     const { masterGain, oscillators, lfo } = nodesRef.current;
     
     if (masterGain && audioContextRef.current) {
-      // Smooth fade out over 2 seconds
       masterGain.gain.linearRampToValueAtTime(0, audioContextRef.current.currentTime + 2);
       
       setTimeout(() => {
-        // Stop animation frame
         if (animationFrameRef.current) {
           cancelAnimationFrame(animationFrameRef.current);
           animationFrameRef.current = null;
         }
         
-        // Stop and disconnect all nodes
-        oscillators.forEach(osc => {
-          try { osc.stop(); } catch {}
-        });
-        if (lfo) {
-          try { lfo.stop(); } catch {}
-        }
+        oscillators.forEach(osc => { try { osc.stop(); } catch {} });
+        if (lfo) { try { lfo.stop(); } catch {} }
         
         if (audioContextRef.current) {
           audioContextRef.current.close();
@@ -173,47 +161,61 @@ export function useRelaxingMusic() {
   }, [isPlaying]);
 
   const toggle = useCallback(() => {
-    if (isPlaying) {
-      stop();
-    } else {
-      play();
-    }
+    if (isPlaying) stop();
+    else play();
   }, [isPlaying, play, stop]);
 
   const setVolume = useCallback((newVolume: number) => {
     const clampedVolume = Math.max(0, Math.min(1, newVolume));
     setVolumeState(clampedVolume);
     
-    const { gains, masterGain } = nodesRef.current;
+    const { gains } = nodesRef.current;
     if (audioContextRef.current && gains.length > 0) {
       const time = audioContextRef.current.currentTime;
-      
-      // Update individual gain nodes with their relative volumes
-      gains[0]?.gain.linearRampToValueAtTime(clampedVolume * 0.5, time + 0.1);  // Main 432 Hz
-      gains[1]?.gain.linearRampToValueAtTime(clampedVolume * 0.2, time + 0.1);  // Sub
-      gains[2]?.gain.linearRampToValueAtTime(clampedVolume * 0.1, time + 0.1);  // High
-      gains[3]?.gain.linearRampToValueAtTime(clampedVolume * 0.15, time + 0.1); // Binaural
+      gains[0]?.gain.linearRampToValueAtTime(clampedVolume * 0.5, time + 0.1);
+      gains[1]?.gain.linearRampToValueAtTime(clampedVolume * 0.2, time + 0.1);
+      gains[2]?.gain.linearRampToValueAtTime(clampedVolume * 0.1, time + 0.1);
+      gains[3]?.gain.linearRampToValueAtTime(clampedVolume * 0.15, time + 0.1);
     }
   }, [setVolumeState]);
+
+  // Auto-play on mount if enabled
+  useEffect(() => {
+    if (autoPlay && !isPlaying) {
+      // Small delay to ensure user interaction has happened
+      const timer = setTimeout(() => {
+        // Only auto-play after user has interacted with the page
+        const handleFirstInteraction = () => {
+          play();
+          document.removeEventListener('click', handleFirstInteraction);
+          document.removeEventListener('touchstart', handleFirstInteraction);
+        };
+        document.addEventListener('click', handleFirstInteraction);
+        document.addEventListener('touchstart', handleFirstInteraction);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
-      if (audioContextRef.current) {
-        audioContextRef.current.close();
-      }
+      if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
+      if (audioContextRef.current) audioContextRef.current.close();
     };
   }, []);
 
-  return {
-    isPlaying,
-    volume,
-    play,
-    stop,
-    toggle,
-    setVolume,
-  };
+  return (
+    <MusicContext.Provider value={{ isPlaying, volume, play, stop, toggle, setVolume }}>
+      {children}
+    </MusicContext.Provider>
+  );
+}
+
+export function useMusic() {
+  const context = useContext(MusicContext);
+  if (context === undefined) {
+    throw new Error('useMusic must be used within a MusicProvider');
+  }
+  return context;
 }

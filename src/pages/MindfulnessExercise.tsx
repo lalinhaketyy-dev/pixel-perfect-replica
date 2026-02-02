@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import { ArrowLeft, Play, Pause, RotateCcw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useMusic } from '@/contexts/MusicContext';
 import { PageContainer, CalmButton } from '@/components/CalmComponents';
 
-const TOTAL_DURATION = 15 * 60; // 15 minutes in seconds
+const TOTAL_DURATION = 15 * 60;
 
 const GUIDED_STEPS = [
   { time: 0, key: 'mindfulness.step1' },
@@ -19,9 +20,17 @@ const GUIDED_STEPS = [
 export default function MindfulnessExercise() {
   const { t } = useLanguage();
   const navigate = useNavigate();
+  const { isPlaying, play } = useMusic();
   const [isActive, setIsActive] = useState(false);
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
+
+  // Auto-start music when meditation starts
+  useEffect(() => {
+    if (isActive && !isPlaying) {
+      play();
+    }
+  }, [isActive, isPlaying, play]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
