@@ -1,5 +1,7 @@
 import { useLocalStorage } from './useLocalStorage';
 
+export type AIMode = 'empathetic' | 'rational';
+
 export interface MoodEntry {
   date: string;
   mood: number;
@@ -9,12 +11,14 @@ export interface UserProfile {
   nickname: string;
   hasCompletedOnboarding: boolean;
   moodHistory: MoodEntry[];
+  aiMode: AIMode;
 }
 
 const defaultProfile: UserProfile = {
   nickname: '',
   hasCompletedOnboarding: false,
   moodHistory: [],
+  aiMode: 'empathetic',
 };
 
 export function useUserProfile() {
@@ -39,6 +43,10 @@ export function useUserProfile() {
     }));
   };
 
+  const setAIMode = (aiMode: AIMode) => {
+    setProfile((prev) => ({ ...prev, aiMode }));
+  };
+
   const clearHistory = () => {
     setProfile((prev) => ({ ...prev, moodHistory: [] }));
   };
@@ -58,6 +66,7 @@ export function useUserProfile() {
     updateNickname,
     completeOnboarding,
     addMoodEntry,
+    setAIMode,
     clearHistory,
     getAverageMood,
     resetProfile,

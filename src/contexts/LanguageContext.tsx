@@ -38,15 +38,17 @@ const translations: Record<Language, Record<string, string>> = {
     
     // Chat
     'chat.title': 'Chat',
-    'chat.placeholder': 'Digite sua mensagem...',
+    'chat.placeholder': 'Como você está?',
     'chat.send': 'Enviar',
-    'chat.greeting': 'Olá{name}! Como você está se sentindo hoje? Estou aqui para te ouvir e apoiar.',
+    'chat.greeting': 'Olá! Como posso ajudar?',
     'chat.typing': 'Digitando...',
-    'chat.voiceStart': 'Iniciar conversa por voz',
-    'chat.voiceStop': 'Encerrar conversa por voz',
+    'chat.voiceStart': 'Falar',
+    'chat.voiceStop': 'Parar',
     'chat.voiceConnecting': 'Conectando...',
     'chat.listening': 'Ouvindo...',
     'chat.speaking': 'Falando...',
+    'chat.modeEmpathetic': 'Modo Empático',
+    'chat.modeRational': 'Modo Racional',
     
     // Mental Exercises
     'mental.title': 'Exercícios Mentais',
@@ -210,15 +212,17 @@ const translations: Record<Language, Record<string, string>> = {
     
     // Chat
     'chat.title': 'Chat',
-    'chat.placeholder': 'Type your message...',
+    'chat.placeholder': 'How are you?',
     'chat.send': 'Send',
-    'chat.greeting': "Hello{name}! How are you feeling today? I'm here to listen and support you.",
+    'chat.greeting': 'Hi! How can I help?',
     'chat.typing': 'Typing...',
-    'chat.voiceStart': 'Start voice conversation',
-    'chat.voiceStop': 'End voice conversation',
+    'chat.voiceStart': 'Speak',
+    'chat.voiceStop': 'Stop',
     'chat.voiceConnecting': 'Connecting...',
     'chat.listening': 'Listening...',
     'chat.speaking': 'Speaking...',
+    'chat.modeEmpathetic': 'Empathetic Mode',
+    'chat.modeRational': 'Rational Mode',
     
     // Mental Exercises
     'mental.title': 'Mental Exercises',

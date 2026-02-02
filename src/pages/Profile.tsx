@@ -1,14 +1,15 @@
-import { User, Globe, Trash2, Info, Shield } from 'lucide-react';
+import { User, Globe, Trash2, Info, Shield, Heart, Brain } from 'lucide-react';
 import { useLanguage, Language } from '@/contexts/LanguageContext';
-import { useUserProfile } from '@/hooks/useUserProfile';
+import { useUserProfile, AIMode } from '@/hooks/useUserProfile';
 import { useChatMessages } from '@/hooks/useChatMessages';
 import { PageContainer, CalmCard } from '@/components/CalmComponents';
 import { BottomNav } from '@/components/BottomNav';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 export default function Profile() {
   const { t, language, setLanguage } = useLanguage();
-  const { profile, getAverageMood, clearHistory: clearMoodHistory } = useUserProfile();
+  const { profile, setAIMode, getAverageMood, clearHistory: clearMoodHistory } = useUserProfile();
   const { clearMessages } = useChatMessages();
 
   const moodSymbols = ['', '◆', '▼', '●', '▲', '★'];
@@ -40,6 +41,48 @@ export default function Profile() {
       </header>
 
       <div className="p-6 space-y-4">
+        {/* AI Mode Selection */}
+        <CalmCard>
+          <div className="flex items-center gap-3 mb-4">
+            <Brain className="w-5 h-5 text-primary" />
+            <span className="font-semibold">
+              {language === 'pt' ? 'Modo da IA' : 'AI Mode'}
+            </span>
+          </div>
+          <div className="flex gap-2">
+            {(['empathetic', 'rational'] as AIMode[]).map((mode) => (
+              <Button
+                key={mode}
+                variant={profile.aiMode === mode ? 'default' : 'outline'}
+                onClick={() => setAIMode(mode)}
+                className={cn(
+                  'flex-1 gap-2',
+                  profile.aiMode === mode && mode === 'empathetic' && 'bg-primary',
+                  profile.aiMode === mode && mode === 'rational' && 'bg-secondary text-secondary-foreground'
+                )}
+              >
+                {mode === 'empathetic' ? (
+                  <>
+                    <Heart className="w-4 h-4" />
+                    {language === 'pt' ? 'Empático' : 'Empathetic'}
+                  </>
+                ) : (
+                  <>
+                    <Brain className="w-4 h-4" />
+                    {language === 'pt' ? 'Racional' : 'Rational'}
+                  </>
+                )}
+              </Button>
+            ))}
+          </div>
+          <p className="text-xs text-muted-foreground mt-3">
+            {profile.aiMode === 'empathetic' 
+              ? (language === 'pt' ? 'IA acolhedora que valida seus sentimentos' : 'Warm AI that validates your feelings')
+              : (language === 'pt' ? 'IA direta que foca em soluções práticas' : 'Direct AI that focuses on practical solutions')
+            }
+          </p>
+        </CalmCard>
+
         <CalmCard>
           <div className="flex items-center gap-3 mb-4">
             <Globe className="w-5 h-5 text-primary" />
@@ -53,7 +96,7 @@ export default function Profile() {
                 onClick={() => setLanguage(lang)}
                 className="flex-1"
               >
-                {lang === 'pt' ? '🇧🇷 Português' : '🇺🇸 English'}
+                {lang === 'pt' ? 'Português' : 'English'}
               </Button>
             ))}
           </div>
@@ -68,7 +111,7 @@ export default function Profile() {
 
         <CalmCard>
           <div className="flex items-center gap-3 mb-2">
-            <Shield className="w-5 h-5 text-secondary" />
+            <Shield className="w-5 h-5 text-muted-foreground" />
             <span className="font-semibold">{t('profile.privacy')}</span>
           </div>
           <p className="text-sm text-muted-foreground">{t('profile.privacyText')}</p>
@@ -76,7 +119,7 @@ export default function Profile() {
 
         <CalmCard>
           <div className="flex items-center gap-3 mb-2">
-            <Info className="w-5 h-5 text-lavender" />
+            <Info className="w-5 h-5 text-muted-foreground" />
             <span className="font-semibold">{t('profile.about')}</span>
           </div>
           <p className="text-sm text-muted-foreground">{t('profile.aboutText')}</p>
