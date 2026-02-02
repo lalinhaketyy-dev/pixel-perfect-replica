@@ -171,10 +171,11 @@ const translations: Record<Language, Record<string, string>> = {
     'crisis.close': 'Fechar',
     
     // Music Player
-    'music.toggle': 'Música relaxante',
-    'music.title': 'Música 432 Hz',
-    'music.description': 'Frequência de 432 Hz, conhecida como "frequência de cura universal", ajuda a relaxar o cérebro e reduzir o estresse.',
+    'music.toggle': 'Ondas sonoras relaxantes',
+    'music.title': 'Ondas 432 Hz',
+    'music.description': 'Frequência de 432 Hz com ondas binaurais que acalmam a mente e reduzem o estresse. Feche os olhos e respire fundo.',
     'music.volume': 'Volume',
+    'music.playing': 'Reproduzindo ondas de calmaria...',
     
     // Common
     'common.back': 'Voltar',
@@ -342,10 +343,11 @@ const translations: Record<Language, Record<string, string>> = {
     'crisis.close': 'Close',
     
     // Music Player
-    'music.toggle': 'Relaxing music',
-    'music.title': '432 Hz Music',
-    'music.description': '432 Hz frequency, known as the "universal healing frequency", helps relax the brain and reduce stress.',
+    'music.toggle': 'Relaxing sound waves',
+    'music.title': '432 Hz Waves',
+    'music.description': '432 Hz frequency with binaural waves that calm the mind and reduce stress. Close your eyes and breathe deeply.',
     'music.volume': 'Volume',
+    'music.playing': 'Playing calming waves...',
     
     // Common
     'common.back': 'Back',
