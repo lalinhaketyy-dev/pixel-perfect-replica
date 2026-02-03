@@ -2,6 +2,13 @@ import { useLocalStorage } from './useLocalStorage';
 
 export type AIMode = 'empathetic' | 'rational';
 
+export interface AccessibilitySettings {
+  highContrast: boolean;
+  largeText: boolean;
+  reducedMotion: boolean;
+  screenReader: boolean;
+}
+
 export interface MoodEntry {
   date: string;
   mood: number;
@@ -12,13 +19,22 @@ export interface UserProfile {
   hasCompletedOnboarding: boolean;
   moodHistory: MoodEntry[];
   aiMode: AIMode;
+  accessibility: AccessibilitySettings;
 }
+
+const defaultAccessibility: AccessibilitySettings = {
+  highContrast: false,
+  largeText: false,
+  reducedMotion: false,
+  screenReader: false,
+};
 
 const defaultProfile: UserProfile = {
   nickname: '',
   hasCompletedOnboarding: false,
   moodHistory: [],
   aiMode: 'empathetic',
+  accessibility: defaultAccessibility,
 };
 
 export function useUserProfile() {
@@ -47,6 +63,13 @@ export function useUserProfile() {
     setProfile((prev) => ({ ...prev, aiMode }));
   };
 
+  const updateAccessibility = (settings: Partial<AccessibilitySettings>) => {
+    setProfile((prev) => ({
+      ...prev,
+      accessibility: { ...prev.accessibility, ...settings },
+    }));
+  };
+
   const clearHistory = () => {
     setProfile((prev) => ({ ...prev, moodHistory: [] }));
   };
@@ -67,6 +90,7 @@ export function useUserProfile() {
     completeOnboarding,
     addMoodEntry,
     setAIMode,
+    updateAccessibility,
     clearHistory,
     getAverageMood,
     resetProfile,
