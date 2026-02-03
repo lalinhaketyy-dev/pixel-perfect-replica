@@ -255,3 +255,95 @@
     padding-bottom: max(1rem, env(safe-area-inset-bottom));
   }
 }
+
+/* Accessibility Modes */
+
+/* High Contrast Mode - For visual impairment */
+.high-contrast {
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  --card: 0 0% 5%;
+  --card-foreground: 0 0% 100%;
+  --primary: 195 100% 60%;
+  --primary-foreground: 0 0% 0%;
+  --secondary: 155 100% 50%;
+  --secondary-foreground: 0 0% 0%;
+  --muted: 0 0% 15%;
+  --muted-foreground: 0 0% 85%;
+  --border: 0 0% 40%;
+  --accent: 60 100% 50%;
+  --accent-foreground: 0 0% 0%;
+}
+
+.high-contrast * {
+  border-width: 2px !important;
+}
+
+.high-contrast button,
+.high-contrast a {
+  text-decoration: underline;
+  font-weight: 700;
+}
+
+/* Large Text Mode - For visual impairment and autism */
+.large-text {
+  font-size: 125%;
+}
+
+.large-text h1 {
+  font-size: 2.5rem;
+}
+
+.large-text h2 {
+  font-size: 2rem;
+}
+
+.large-text p,
+.large-text span,
+.large-text button {
+  font-size: 1.25rem;
+  line-height: 1.8;
+}
+
+/* Reduced Motion Mode - For autism and vestibular disorders */
+.reduced-motion *,
+.reduced-motion *::before,
+.reduced-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Screen Reader Optimizations */
+.screen-reader button:focus,
+.screen-reader a:focus,
+.screen-reader input:focus,
+.screen-reader textarea:focus {
+  outline: 4px solid hsl(var(--primary));
+  outline-offset: 4px;
+}
+
+.screen-reader .sr-enhanced {
+  position: relative;
+}
+
+.screen-reader .sr-enhanced::after {
+  content: attr(aria-label);
+  position: absolute;
+  left: 0;
+  bottom: -2rem;
+  background: hsl(var(--foreground));
+  color: hsl(var(--background));
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+
+.screen-reader .sr-enhanced:focus::after {
+  opacity: 1;
+}

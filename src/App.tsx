@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { MusicProvider } from "@/contexts/MusicContext";
+import { AccessibilityProvider } from "@/components/AccessibilityProvider";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { GlobalMusicPlayer } from "@/components/GlobalMusicPlayer";
 import Welcome from "./pages/Welcome";
@@ -66,14 +67,16 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <LanguageProvider>
       <MusicProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <FloatingMusicIndicator />
-            <AppRoutes />
-          </BrowserRouter>
-        </TooltipProvider>
+        <AccessibilityProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <FloatingMusicIndicator />
+              <AppRoutes />
+            </BrowserRouter>
+          </TooltipProvider>
+        </AccessibilityProvider>
       </MusicProvider>
     </LanguageProvider>
   </QueryClientProvider>
